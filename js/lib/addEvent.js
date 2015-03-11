@@ -5,7 +5,8 @@
  */
 
 define(function(require, exports, module) {
-	var isMobile = (/(mobile|iphone|ipod|ipad|ios|android|windows phone)/i).test(navigator.userAgent);
+	var util = require("lib/util");
+	
 	var map = {
 		"click" : "touchstart",
 		"mousedown" : "touchstart",
@@ -14,7 +15,7 @@ define(function(require, exports, module) {
 	
 	module.exports = function(dom, type, handle, isCapture){
 		if(dom.addEventListener){
-			dom.addEventListener(isMobile ? map[type] || type : type, handle, isCapture);
+			dom.addEventListener(util.isMobile ? map[type] || type : type, handle, isCapture);
 		}else if(dom.attachEvent){
 			dom.attachEvent("on" + type, handle);
 		}else{

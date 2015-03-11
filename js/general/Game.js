@@ -11,19 +11,28 @@ define(function(require, exports, module) {
 	var Switcher = require("general/Switcher");
 	var BeginStage = require("general/BeginStage");
 	var addEvent = require("lib/addEvent");
+	var Storage = require("lib/Storage");
+	var util = require("lib/util");
 	
     var canvas = document.getElementById("stage");
     var bsNode = document.getElementById("begin");
+    var tip = document.getElementById("tip");
+    var btnFW = document.getElementById("btnFW");
+    var btnReset = document.getElementById("btnReset");
+    var wxArrow = document.getElementById("wxArrow");
     var stage = canvas.getContext("2d");
     
     var FPS = 60;
     var BASE_HEIGHT = 560;
+    var STORAGE_KEY = "core-ball-level";
+    var SHARE_HREF = "sinaweibo://share?content=考验技巧的HTML5小游戏，我已玩到第#{level}关了，你也来试试吧！ http://ra.ndom.me/core-ball/";
     
     var scene;
     var beginStage = BeginStage(bsNode);
     var switcher;
-    var level = 1;
+    var level = Storage.getValue(STORAGE_KEY) || 1;
     var scale;
+    var isResetting = false
 	
     function adaptScreen(){
 		var width = document.body.scrollWidth || document.documentElement.scrollWidth;
@@ -38,6 +47,31 @@ define(function(require, exports, module) {
         bsNode.style.height = height + "px";
         
         scale = height / 560;
+	}
+	
+	function updateSharedHref(){
+		btnFW.href = SHARE_HREF.replace(/#\{level\}/, level);
+	}
+	
+	function initForward(){
+		if(util.isWenxin){
+			addEvent(btnFW, "mousedown", function(){
+				wxArrow.style.display = "";
+			});
+			
+		}else if(util.isMobile){
+			updateSharedHref();
+			
+		}else{
+			//http://service.weibo.com/share/share.php?url=http://ra.ndom.me/core-ball/index.html&type=button&language=zh_cn&appkey=2hwszt&searchPic=true&style=number
+		}
+	}
+	
+	function updateLevel(lv){
+		level = lv;
+		Storage.setValue(STORAGE_KEY, level);
+		beginStage.level(level);
+		!util.isWenxin && util.isMobile && updateSharedHref();
 	}
 
     
@@ -55,14 +89,29 @@ define(function(require, exports, module) {
 				scene.shot();
 			}
 		});
-
+		
+		addEvent(wxArrow, "mousedown", function(){
+			wxArrow.style.display = "none";
+		});
+		
+		addEvent(btnReset, "mousedown", function(){
+			if(!isResetting){
+				isResetting = true;
+				tip.style.display = "";
+				updateLevel(1);
+				setTimeout(function(){
+					tip.style.display = "none";
+					isResetting = false;
+				}, 1500);
+			}
+		});
+		
 		
 		scene.on("passed", function(){
 			switcher.switchStage(0, function(){
 				scene.enabled = false;
-				level++;
+				updateLevel(level + 1);
 				canvas.style.display = "none";
-				beginStage.level(level);
 				beginStage.show();
 			});
 		});
@@ -82,7 +131,6 @@ define(function(require, exports, module) {
 			switcher.switchStage(1, function(){
 				scene.run(level);
 			});
-			
 		});
     }
     
