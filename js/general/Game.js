@@ -68,7 +68,7 @@ define(function(require, exports, module) {
 	}
 	
 	function updateLevel(lv){
-		level = lv;
+		level = +lv;
 		Storage.setValue(STORAGE_KEY, level);
 		beginStage.level(level);
 		!util.isWenxin && util.isMobile && updateSharedHref();

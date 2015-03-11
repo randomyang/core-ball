@@ -110,4 +110,5 @@ module.exports = function(grunt) {
 	});
   
 	grunt.registerTask('build', ['clean:before', 'transport','combi', 'uglify', 'clean:after']);
+	//grunt.registerTask('build', ['clean:before', 'transport', 'combi']);
 };
