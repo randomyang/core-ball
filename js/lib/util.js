@@ -45,5 +45,6 @@ define(function(require, exports, module) {
         isAndroid : (/android/i).test(navigator.userAgent),
         
         isWeixin : (/MicroMessenger/i).test(navigator.userAgent)
+        
 	};
 });

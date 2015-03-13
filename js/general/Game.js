@@ -14,6 +14,7 @@ define(function(require, exports, module) {
 	var Storage = require("lib/Storage");
 	var util = require("lib/util");
 	var stopEvent = require("lib/stopEvent");
+	//var LevelCode = require("general/LevelCode");
 	
     var canvas = document.getElementById("stage");
     var bsNode = document.getElementById("begin");

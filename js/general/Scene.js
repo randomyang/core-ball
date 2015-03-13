@@ -122,6 +122,8 @@ define(function(require, exports, module) {
 			var w = util.getTextWidth(stage, 0, 0, text, 30 * scale);
 			
 			util.drawText(stage, (canvas.width - w) / 2, 200 * scale, text, 30 * scale, "yellow");
+			
+			
 		}
 		
 		me = {
