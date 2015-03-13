@@ -10,13 +10,14 @@ define(function(require, exports, module) {
 	var util = require("lib/util");
 	
 	var Collide = {
-		check : function(core, ball){
+		check : function(core, ball, scale){
 			var childs = core.childs();
 			var i = childs.length;
-			var d = 2 * ball.rad();
+			var d = Math.ceil(2 * ball.rad());
 			
+			scale = scale || 1;
 			while(i--){
-				if(ball !== childs[i].ball && util.getPointDistance(ball.pos(), childs[i].ball.pos()) <= d + 2){
+				if(ball !== childs[i].ball && util.getPointDistance(ball.pos(), childs[i].ball.pos()) <= d + Math.ceil(2 * scale)){
 					return true;
 				}
 			}

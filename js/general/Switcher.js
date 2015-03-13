@@ -32,7 +32,6 @@ define(function(require, exports, module) {
 							me.point = p;
 						}else{
 							me.point = p;
-							callBack && callBack();
 							isEnd = true;
 						}
 						
@@ -43,7 +42,6 @@ define(function(require, exports, module) {
 							me.point = p;
 						}else{
 							me.point = p;
-							callBack && callBack();
 							isEnd = true;
 						}
 					}
@@ -56,7 +54,10 @@ define(function(require, exports, module) {
 				if(me.enabled){
 					stage.fillStyle = color;
 					stage.fillRect(p[0] - width / 2, p[1] - height / 2, width, height);
-					isEnd && (me.enabled = false);
+					if(isEnd){
+						me.enabled = false
+						callBack && callBack();
+					}
 				}
 			},
 			

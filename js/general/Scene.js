@@ -13,6 +13,7 @@ define(function(require, exports, module) {
 	var BallQueue = require("general/BallQueue");
 	var Collide = require("general/Collide");
 	var Levels = require("general/Levels");
+	var util = require("lib/util");
 	
 	var EVENT_PASSED = "passed";
 	var EVENT_FAILED = "failed";
@@ -48,7 +49,7 @@ define(function(require, exports, module) {
 			ballQueue = BallQueue(conf.queueCount, canvas.width / 2, core.pos().y + core.rad() * 4, stage, scale);
 			ballQueue.on("popup", function(ball){
 				core.addChild(90 - core.angle(), ball);
-				if(Collide.check(core, ball)){
+				if(Collide.check(core, ball, scale)){
 					failedBall = ball;
 					fail();
 				}else{
@@ -116,17 +117,27 @@ define(function(require, exports, module) {
 			}
 		}
 		
+		function toBeContinued(){
+			var text = "to be continued...";
+			var w = util.getTextWidth(stage, 0, 0, text, 30 * scale);
+			
+			util.drawText(stage, (canvas.width - w) / 2, 200 * scale, text, 30 * scale, "yellow");
+		}
+		
 		me = {
 			enabled : false,
 			
 			run : function(lv){
 				var conf = Levels[lv];
 				level = lv;
-				me.enabled = true;
 				if(conf){
+					me.enabled = true;
 					initStage(conf);
 					container.style.backgroundColor = "#000";
 					state = "run";
+					
+				}else{
+					toBeContinued();
 				}
 			},
 			

@@ -37,10 +37,12 @@ define(function(require, exports, module) {
         },
         
         getPointDistance : function(p1, p2){
-            return Math.sqrt(Math.pow(p1.x - p2.x, 2) + Math.pow(p1.y - p2.y, 2));
+            return Math.floor(Math.sqrt(Math.floor(Math.pow(p1.x - p2.x, 2)) + Math.floor(Math.pow(p1.y - p2.y, 2))));
         },
         
         isMobile : (/(mobile|iphone|ipod|ipad|ios|android|windows phone)/i).test(navigator.userAgent),
+        
+        isAndroid : (/android/i).test(navigator.userAgent),
         
         isWeixin : (/MicroMessenger/i).test(navigator.userAgent)
 	};

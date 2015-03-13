@@ -13,6 +13,7 @@ define(function(require, exports, module) {
 	var addEvent = require("lib/addEvent");
 	var Storage = require("lib/Storage");
 	var util = require("lib/util");
+	var stopEvent = require("lib/stopEvent");
 	
     var canvas = document.getElementById("stage");
     var bsNode = document.getElementById("begin");
@@ -25,14 +26,16 @@ define(function(require, exports, module) {
     var FPS = 60;
     var BASE_HEIGHT = 560;
     var STORAGE_KEY = "core-ball-level";
-    var SHARE_HREF = "sinaweibo://share?content=考验技巧的HTML5小游戏，我已玩到第#{level}关了，你也来试试吧！ http://ra.ndom.me/core-ball/";
+    var WX_SHARE_TEXT = "Core Ball(酷啵)-练手活的HTML5游戏，我已玩到第#{level}关了，你也来试试吧!";
+    var SHARE_HREF = "sinaweibo://share?content=Core Ball(酷啵) - 练手活的HTML5小游戏，我已玩到第#{level}关了，你也来试试吧！ http://coreball.sinaapp.com";
     
     var scene;
     var beginStage = BeginStage(bsNode);
     var switcher;
-    var level = Storage.getValue(STORAGE_KEY) || 1;
+    var level = +Storage.getValue(STORAGE_KEY) || 1;
     var scale;
     var isResetting = false
+    var tid = 0;
 	
     function adaptScreen(){
 		var width = document.body.scrollWidth || document.documentElement.scrollWidth;
@@ -54,7 +57,7 @@ define(function(require, exports, module) {
 	}
 	
 	function initForward(){
-		if(util.isWenxin){
+		if(util.isWeixin){
 			addEvent(btnFW, "mousedown", function(){
 				wxArrow.style.display = "";
 			});
@@ -70,8 +73,9 @@ define(function(require, exports, module) {
 	function updateLevel(lv){
 		level = +lv;
 		Storage.setValue(STORAGE_KEY, level);
+		document.title = WX_SHARE_TEXT.replace(/\#\{level\}/, level);
 		beginStage.level(level);
-		!util.isWenxin && util.isMobile && updateSharedHref();
+		!util.isWeixin && util.isMobile && updateSharedHref();
 	}
 
     
@@ -84,10 +88,11 @@ define(function(require, exports, module) {
 				while(i--){
 					scene.shot();
 				}
-				
 			}else{
 				scene.shot();
 			}
+			
+			evt.target.getAttribute("data-capture")!="1" && stopEvent(evt);
 		});
 		
 		addEvent(wxArrow, "mousedown", function(){
@@ -102,7 +107,7 @@ define(function(require, exports, module) {
 				setTimeout(function(){
 					tip.style.display = "none";
 					isResetting = false;
-				}, 1500);
+				}, 1000);
 			}
 		});
 		
@@ -134,22 +139,26 @@ define(function(require, exports, module) {
 		});
     }
     
+    function timerHandle(){
+		window.clearTimeout(tid);
+		scene.update();
+		scene.render();
+		
+		switcher.update();
+		switcher.render();
+		tid = window.setTimeout(timerHandle, 1000 / FPS);
+    }
+    
+    
 	function init(){
 		adaptScreen();
 		scene = Scene(document.body, canvas, stage, scale);
 		initEvent();
-		
+		initForward();
 		beginStage.level(level);
 		beginStage.show();
 		
-		window.setInterval(function(){
-			scene.update();
-			scene.render();
-			
-			switcher.update();
-			switcher.render();
-			
-		}, 1000 / FPS);
+		timerHandle();
 	}
 	
 	var Game = {

@@ -8,6 +8,7 @@ define(function(require, exports, module) {
 	"use strict";
 	var addEvent = require("lib/addEvent");
 	var CustEvent = require("lib/CustEvent");
+	var util = require("lib/util");
 	
 	var custEvent = CustEvent();
 	var level = 0;
@@ -17,11 +18,18 @@ define(function(require, exports, module) {
 	function BeginStage(node){
 		var btnStart = node.getElementsByClassName("button")[0];
 		var txtLevel = node.getElementsByClassName("text")[0];
+		var txtAr = document.getElementById("txtAr");
 		
 		function init(){
 			addEvent(btnStart, "click", function(){
 				custEvent.fire(EVENT_START, level);
 			});
+
+			if(util.isAndroid){
+				txtAr.innerHTML = "GO";
+			}else{
+				txtAr.innerHTML ="▶";	
+			}
 		}
 		
 		var me = {
