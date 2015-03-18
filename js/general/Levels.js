@@ -91,6 +91,30 @@ define(function(require, exports, module) {
 		};
 	}
 	
+	function typeF(v1, v2, td1, td2){
+		return function(){
+			var angle = 0;
+			var t = +(new Date);
+			var i = 0;
+			var arr = [[v1, td1], [v2, td2]];
+			var d = 1;
+			
+			return function(){
+				var t2 = +(new Date);
+				var  v = arr[i][0];
+				if(t2 - t > arr[i][1]){
+					v = arr[i][0];
+					i = (i + 1) % 2;
+					t = +(new Date);
+					d = -d;
+				}
+				
+				angle += d * v;
+				return angle;
+			}
+		}
+	}
+	
 	var roundTypes = {
 		"A1" : typeAB(1.5, 1),
 		"A2" : typeAB(1.5, -1),
@@ -110,7 +134,10 @@ define(function(require, exports, module) {
 		
 		"E1" : typeE(2),
 		"E2" : typeDE(2, 2.3, 1000, 1),
-		"E3" : typeDE(2, 2.5, 1000, 1)
+		"E3" : typeDE(2, 2.5, 1000, 1),
+		
+		"F1" : typeF(2, 0.3, 200, 300),
+		"F2" : typeF(3.5, 1, 250, 1500)
 	};
 	
 	var childsTypes = {
@@ -197,7 +224,18 @@ define(function(require, exports, module) {
 		"57" : ["4", 22, "C1"],
 		"58" : ["4", 26, "D1"],
 		"59" : ["4", 25, "E2"],
-		"60" : ["12", 14, "E2"]
+		"60" : ["12", 14, "E2"],
+		
+		"61" : ["10", 11, "F1"],
+		"62" : ["4", 21, "F1"],
+		"63" : ["8", 16, "F1"],
+		"64" : ["2", 24, "F1"],
+		"65" : ["16", 8, "F1"],
+		"66" : ["12", 14, "F2"],
+		"67" : ["8", 19, "F2"],
+		"68" : ["3", 21, "F2"],
+		"69" : ["0", 32, "F2"],
+		"70" : ["8", 20, "F1"]
 		
 	};
 
