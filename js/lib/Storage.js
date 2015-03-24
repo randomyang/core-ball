@@ -9,12 +9,16 @@ define(function(require, exports, module) {
 	
 	var Storage = {
 		setValue : function(key, value){
-			window.localStorage && (window.localStorage[key] = value);
+			try{
+				window.localStorage && (window.localStorage[key] = value);
+			}catch(ex){}
 		},
 		
 		getValue : function(key){
 			if(window.localStorage){
+				try{
 				return window.localStorage[key];
+				}catch(ex){}
 			}
 		}
 	};
