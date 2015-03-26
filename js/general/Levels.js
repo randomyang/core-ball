@@ -56,10 +56,17 @@ define(function(require, exports, module) {
 		};
 	}
 	
-	function typeE(v){
+	function typeE(v1, v2){
 		var d = 1;
+		var map = {
+			"-1" : v2,
+			"1" : v1
+		};
+		var v = v2 ? map[d] : v1;
+		
 		addEvent(document.body, "mousedown", function(){
 			d = -d;
+			v = v2 ? map[d] : v1;
 		});
 		return function(){
 			var angle = 0;
@@ -136,6 +143,8 @@ define(function(require, exports, module) {
 		"E1" : typeE(2),
 		"E2" : typeDE(2, 2.3, 1000, 1),
 		"E3" : typeDE(2, 2.5, 1000, 1),
+		"E4" : typeE(3, 2),
+		"E5" : typeE(1.5, 3.2),
 		
 		"F1" : typeF(2, 0.3, 200, 300),
 		"F2" : typeF(3.5, 1, 250, 1500),
@@ -250,7 +259,18 @@ define(function(require, exports, module) {
 		"77" : ["6", 21, "F4"],
 		"78" : ["9", 18, "F4"],
 		"79" : ["8", 21, "F4"],
-		"80" : ["6", 24, "F4"]
+		"80" : ["6", 24, "F4"],
+		
+		"81" : ["5", 12, "E4"],
+		"82" : ["7", 14, "E4"],
+		"83" : ["2", 21, "E4"],
+		"84" : ["0", 24, "E4"],
+		"85" : ["7", 16, "E4"],
+		"86" : ["12", 13, "E5"],
+		"87" : ["4", 15, "E5"],
+		"88" : ["5", 19, "E5"],
+		"89" : ["8", 18, "E4"],
+		"90" : ["16", 16, "E4"]
 
 	};
 
