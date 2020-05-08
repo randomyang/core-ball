@@ -1,5 +1,5 @@
-##Core Ball
-    游戏地址 http://coreball.sinaapp.com
+## Core Ball
+    游戏地址 https://ra.ndom.me/coreball/
         
 ## Release History
 * 2015-03-13 First Release
